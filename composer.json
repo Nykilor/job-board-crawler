@@ -1,0 +1,23 @@
+{
+    "name": "nykilor/job-board-crawler",
+    "description": "Web scraps and makes api calls to job board sites and looks for given parameters.",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "~6.0",
+        "symfony/dom-crawler": "^5.0@dev",
+        "symfony/css-selector": "^5.0@dev"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marmolada",
+            "email": "smigi1997@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "JobBoardCrawler\\": "app/lib/JobBoardCrawler"
+        }
+    }
+}
