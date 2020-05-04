@@ -5,7 +5,8 @@
     "require": {
         "guzzlehttp/guzzle": "~6.0",
         "symfony/dom-crawler": "^5.0@dev",
-        "symfony/css-selector": "^5.0@dev"
+        "symfony/css-selector": "^5.0@dev",
+        "php": ">=7.1"
     },
     "license": "MIT",
     "authors": [

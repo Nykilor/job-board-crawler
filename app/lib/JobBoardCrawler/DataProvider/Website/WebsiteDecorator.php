@@ -5,8 +5,7 @@ abstract class WebsiteDecorator implements WebsiteInterface
 {
     protected $website;
 
-    public function __construct(WebsiteInterface $website)
-    {
+    public function __construct(WebsiteInterface $website) {
         $this->website = $website;
     }
 }

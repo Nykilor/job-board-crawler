@@ -31,12 +31,15 @@ interface WebsiteInterface
     /**
      * Filters out the job offers from the html/json depending on the website.
      * @param  Response  $response Return data from fetchOffers method.
+     * @param  array     $query    The base query for filtering if websites fetches all data in one go.
      */
-    public function filterOffersFromResponse(Response $response) : Generator;
+    public function filterOffersFromResponse(Response $response, array $query) : Generator;
 
     /**
      * The normalizer to create an array for JobOffer creation.
      * @return WebsiteOfferDataNormalizerInterface
      */
     public function getNormalizer() : WebsiteOfferDataNormalizerInterface;
+
+    public function getBaseUrl() : string;
 }

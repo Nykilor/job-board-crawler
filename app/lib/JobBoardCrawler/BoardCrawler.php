@@ -4,6 +4,9 @@ namespace JobBoardCrawler;
 use GuzzleHttp\Client;
 
 use GuzzleHttp\Psr7\Response;
+use JobBoardCrawler\DataProvider\WebsiteInterface;
+use JobBoardCrawler\Exception\MissingClassPropertyException;
+use JobBoardCrawler\Model\Collection\JobOfferCollection;
 
 /**
  * Base class to use the library with
@@ -44,7 +47,7 @@ class BoardCrawler
     public function setWebsites(array $websites)
     {
         foreach ($websites as $website) {
-            if ($websites instanceof WebsiteInterface) {
+            if ($website instanceof WebsiteInterface) {
                 $this->websites[] = $website;
             } else {
                 throw new \Exception("Invalid class: ".get_class($website));
@@ -68,7 +71,11 @@ class BoardCrawler
         $this->isQueryAndWebsiteSet();
 
         foreach ($this->websites as $website_class_instance) {
-            // code...
+            $response = $website_class_instance->fetchOffers($this->client, $this->query);
+
+            foreach ($website_class_instance->filterOffersFromResponse($response, $this->query) as $item) {
+                
+            }
         }
     }
 
@@ -83,7 +90,7 @@ class BoardCrawler
         if ($is_websites_empty or $is_query_empty) {
             $msg = "You need to call";
             $msg .= ($is_websites_empty) ? " setWebsites()" : "";
-            $msg .= ($is_query_creator_empty) ? " setQuery()" : "";
+            $msg .= ($is_query_empty) ? " setQuery()" : "";
             throw new MissingClassPropertyException($msg);
         }
     }
