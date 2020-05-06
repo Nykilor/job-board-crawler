@@ -11,7 +11,7 @@ use JobBoardCrawler\Model\CooperationType;
 /**
  * A collection class for Url
  */
-class LocationCollection implements Countable, JsonSerializable, Iterator, ArrayAccess
+class CooperationTypeCollection implements Countable, JsonSerializable, Iterator, ArrayAccess
 {
     /**
      * @var array

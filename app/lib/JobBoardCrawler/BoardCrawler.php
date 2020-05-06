@@ -5,8 +5,10 @@ use GuzzleHttp\Client;
 
 use GuzzleHttp\Psr7\Response;
 use JobBoardCrawler\DataProvider\WebsiteInterface;
+use JobBoardCrawler\Exception\InvalidQueryException;
 use JobBoardCrawler\Exception\MissingClassPropertyException;
 use JobBoardCrawler\Model\Collection\JobOfferCollection;
+use JobBoardCrawler\Model\Query;
 
 /**
  * Base class to use the library with
@@ -30,9 +32,14 @@ class BoardCrawler
     private $offers;
 
     /**
-     * @var array
+     * @var Query
      */
     private $query;
+
+    /**
+     * @var array
+     */
+    private $currencyExchangeRates;
 
     public function __construct(array $client_config = [])
     {
@@ -55,9 +62,9 @@ class BoardCrawler
         }
     }
 
-    public function setQuery(array $query)
+    public function setQuery(Query $query)
     {
-        $this->query = $query;
+        $this->query = ($this->validateQuery($query)) ? $query : null;
     }
 
     /**
@@ -93,5 +100,40 @@ class BoardCrawler
             $msg .= ($is_query_empty) ? " setQuery()" : "";
             throw new MissingClassPropertyException($msg);
         }
+    }
+
+    protected function validateQuery(Query $query){
+        //TODO add the contract types validation if exists,
+        //TODO Add the contract types check in justJoinIt
+        //TODO add the  translator use and the normalizer use for the fetch
+        $city = $query->getCity();
+        $skill = $query->getSkill();
+        $salary = $query->getSalary();
+        $seniority = $query->getSeniority();
+
+        $quickCheckArray = [$city,$skill,$salary,$seniority];
+
+        if(empty(array_filter($quickCheckArray))) {
+            throw new InvalidQueryException("Query has to have at least one parameter set.");
+        }
+
+        if(!is_null($salary)) {
+            $min = $salary->getMin();
+            $currency = $salary->getCurrency();
+            $rate = $salary->getRate();
+            $quickCheckArray = [$min, $currency, $rate];
+
+            if(is_null($query->getCurrencyExchangeRates())) {
+                $exchangeApi = new \BenMajor\ExchangeRatesAPI\ExchangeRatesAPI();
+                $currencyExchangeRates = $exchangeApi->setBaseCurrency("PLN")->fetch();
+                $query->setCurrencyExchangeRates($currencyExchangeRates->getRates());
+            }
+
+            if(count(array_filter($quickCheckArray)) !== 3) {
+                throw new InvalidQueryException("Query->getSalary() has to have the min, currency and rate set");
+            }
+        }
+
+        return true;
     }
 }

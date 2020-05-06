@@ -4,6 +4,7 @@
 namespace JobBoardCrawler\Model;
 
 
+
 class Salary
 {
     /**
@@ -76,7 +77,7 @@ class Salary
      */
     public function setCurrency(string $currency): void
     {
-        $this->currency = strtolower($currency);
+        $this->currency = strtoupper($currency);
     }
 
     /**
@@ -120,9 +121,10 @@ class Salary
 
     public function exchangeCurrency(string $newCurrency, array $exchangeRatesForPln)
     {
+        $newCurrency = strtoupper($newCurrency);
         if($newCurrency !== $this->getCurrency()) {
-            $oldCurrencyRate = ($this->getCurrency() !== "pln") ? $exchangeRatesForPln[$this->getCurrency()] : 1;
-            $newCurrencyRate = ($newCurrency !== "pln") ? $exchangeRatesForPln[$newCurrency] : 1;
+            $oldCurrencyRate = ($this->getCurrency() !== "PLN") ? $exchangeRatesForPln[$this->getCurrency()] : 1;
+            $newCurrencyRate = ($newCurrency !== "PLN") ? $exchangeRatesForPln[$newCurrency] : 1;
             $exchangeRate = round($oldCurrencyRate / $newCurrencyRate, 3);
             $this->setMin($this->getMin() * $exchangeRate);
             $this->setMax($this->getMax() * $exchangeRate);
